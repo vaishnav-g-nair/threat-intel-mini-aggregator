@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Threat Intel Mini Aggregator | SOC Panel</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="soc-theme">
+    <div class="background-overlay"></div>
+    
+    <nav class="navbar navbar-expand-lg navbar-dark soc-navbar">
+        <div class="container">
+            <a class="navbar-brand soc-brand" href="/">
+                <i class="fas fa-shield-halved me-2"></i>
+                <span>Threat Intel Mini Aggregator</span>
+            </a>
+            <span class="navbar-text soc-subtitle">
+                <i class="fas fa-bug me-1"></i> SOC Panel
+            </span>
+        </div>
+    </nav>
+
+    <div class="container main-container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="soc-card">
+                    <div class="card-header soc-card-header">
+                        <h4 class="mb-0">
+                            <i class="fas fa-search me-2"></i>Indicator Analysis
+                        </h4>
+                    </div>
+                    <div class="card-body p-4">
+                        <form action="/analyze" method="POST" id="analyzeForm">
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label for="indicator_type" class="form-label soc-label">
+                                        <i class="fas fa-filter me-1"></i>Indicator Type
+                                    </label>
+                                    <select class="form-select soc-select" id="indicator_type" name="indicator_type">
+                                        <option value="auto">Auto-Detect</option>
+                                        <option value="hash">File Hash (SHA256)</option>
+                                        <option value="ip">IP Address</option>
+                                        <option value="domain">Domain</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-8">
+                                    <label for="indicator" class="form-label soc-label">
+                                        <i class="fas fa-fingerprint me-1"></i>Indicator Value
+                                    </label>
+                                    <input type="text" 
+                                           class="form-control soc-input" 
+                                           id="indicator" 
+                                           name="indicator" 
+                                           placeholder="Enter hash, IP, or domain..."
+                                           required>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4 d-grid">
+                                <button type="submit" class="btn soc-btn-primary btn-lg">
+                                    <i class="fas fa-radar me-2"></i>Analyze Indicator
+                                </button>
+                            </div>
+                        </form>
+
+                        <div class="mt-4 p-3 soc-info-box">
+                            <h6 class="mb-2">
+                                <i class="fas fa-info-circle me-1"></i>Quick Examples
+                            </h6>
+                            <div class="row g-2">
+                                <div class="col-auto">
+                                    <button class="btn btn-sm soc-btn-example" 
+                                            onclick="fillExample('hash', 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855')">
+                                        <i class="fas fa-file me-1"></i>Sample Hash
+                                    </button>
+                                </div>
+                                <div class="col-auto">
+                                    <button class="btn btn-sm soc-btn-example" 
+                                            onclick="fillExample('ip', '8.8.8.8')">
+                                        <i class="fas fa-network-wired me-1"></i>Google DNS
+                                    </button>
+                                </div>
+                                <div class="col-auto">
+                                    <button class="btn btn-sm soc-btn-example" 
+                                            onclick="fillExample('domain', 'example.com')">
+                                        <i class="fas fa-globe me-1"></i>Example Domain
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4 soc-footer">
+                    <p class="mb-1">
+                        <i class="fas fa-database me-1"></i>
+                        Powered by MalwareBazaar & VirusTotal
+                    </p>
+                    <p class="mb-0 text-muted small">
+                        Educational Use Only | Localhost Only
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function fillExample(type, value) {
+            document.getElementById('indicator_type').value = type;
+            document.getElementById('indicator').value = value;
+        }
+
+        document.getElementById('analyzeForm').addEventListener('submit', function(e) {
+            const indicator = document.getElementById('indicator').value.trim();
+            if (!indicator) {
+                e.preventDefault();
+                alert('Please enter an indicator value');
+            }
+        });
+    </script>
+</body>
+</html>
